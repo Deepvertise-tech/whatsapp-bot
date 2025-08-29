@@ -1,5 +1,5 @@
 Note:
 -----
-Please switch to the dev branch first then push your code. Because we dont wanna mess with the main working branch :)
-If the push is working, then we can move it to the main branch.
+Please switch to the 'dev' branch first then push your code. This is for testing. Because we dont wanna mess with the main working branch :)
+If the code that you pushed is working after testing it, we can move it to the main branch.
 thanks!
