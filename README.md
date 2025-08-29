@@ -7,8 +7,3 @@ thanks!
 Overview:
 ---------
 ![The overview of the bot](deepseek_mermaid_20250828_35dd93.png)
-
-Some preview:
--------------
-![p1](p1.png)
-![p2](p2.png)
