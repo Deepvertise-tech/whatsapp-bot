@@ -1,7 +1,6 @@
 Note:
 -----
-Please switch to the 'dev' branch first then push your code. This is for testing. Because we dont wanna mess with the main working branch :)
-If the code that you pushed is working after testing it, we can move it to the main branch.
+Please create and work on your feature branches only to add new features and then merge it with the dev branch after feedback from the team.
 thanks!
 
 Overview:
