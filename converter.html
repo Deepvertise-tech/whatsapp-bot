@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Base64 File Converter</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 700px;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 2.2rem;
+        }
+        
+        p {
+            color: #555;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+        
+        .drop-area {
+            border: 3px dashed #6e8efb;
+            border-radius: 12px;
+            padding: 40px 20px;
+            margin: 25px 0;
+            transition: all 0.3s ease;
+            background-color: rgba(110, 142, 251, 0.1);
+        }
+        
+        .drop-area.highlight {
+            background-color: rgba(110, 142, 251, 0.2);
+            border-color: #4d53e0;
+            transform: scale(1.02);
+        }
+        
+        .drop-area i {
+            font-size: 48px;
+            color: #6e8efb;
+            margin-bottom: 15px;
+        }
+        
+        .drop-text {
+            font-size: 18px;
+            color: #555;
+            margin-bottom: 20px;
+        }
+        
+        .file-input {
+            display: none;
+        }
+        
+        .browse-btn {
+            background: linear-gradient(to right, #6e8efb, #a777e3);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(110, 142, 251, 0.4);
+        }
+        
+        .browse-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(110, 142, 251, 0.6);
+        }
+        
+        .result-area {
+            margin-top: 30px;
+            text-align: left;
+        }
+        
+        .result-area h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+        }
+        
+        .base64-output {
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            max-height: 200px;
+            overflow-y: auto;
+            font-family: monospace;
+            white-space: pre-wrap;
+            word-break: break-all;
+            color: #333;
+        }
+        
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .action-btn {
+            padding: 10px 20px;
+            border-radius: 50px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .copy-btn {
+            background: linear-gradient(to right, #4CAF50, #2E8B57);
+            color: white;
+        }
+        
+        .download-btn {
+            background: linear-gradient(to right, #2196F3, #0D47A1);
+            color: white;
+        }
+        
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .file-info {
+            margin-top: 15px;
+            font-size: 14px;
+            color: #666;
+            text-align: left;
+        }
+        
+        .instructions {
+            background-color: #f0f4ff;
+            border-left: 4px solid #6e8efb;
+            padding: 15px;
+            margin: 20px 0;
+            text-align: left;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .instructions h3 {
+            color: #4d53e0;
+            margin-bottom: 10px;
+        }
+        
+        .instructions ol {
+            padding-left: 20px;
+        }
+        
+        .instructions li {
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+                width: 95%;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .drop-area {
+                padding: 25px 15px;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Base64 File Converter</h1>
+        <p>Convert any file to Base64 encoding for use in applications, APIs, or data storage</p>
+        
+        <div class="instructions">
+            <h3>How to use this tool:</h3>
+            <ol>
+                <li>Drag and drop your file into the area below, or click to browse</li>
+                <li>The file will be converted to Base64 encoding automatically</li>
+                <li>Copy the result or download it as a text file</li>
+                <li>Use the Base64 string in your applications or configurations</li>
+            </ol>
+        </div>
+        
+        <div class="drop-area" id="dropArea">
+            <i>📁</i>
+            <div class="drop-text">Drag & Drop your file here</div>
+            <p>OR</p>
+            <input type="file" id="fileInput" class="file-input">
+            <button class="browse-btn" id="browseBtn">Browse Files</button>
+        </div>
+        
+        <div class="file-info" id="fileInfo"></div>
+        
+        <div class="result-area" id="resultArea" style="display: none;">
+            <h3>Base64 Output:</h3>
+            <div class="base64-output" id="base64Output"></div>
+            <div class="action-buttons">
+                <button class="action-btn copy-btn" id="copyBtn">Copy to Clipboard</button>
+                <button class="action-btn download-btn" id="downloadBtn">Download as Text</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const dropArea = document.getElementById('dropArea');
+            const fileInput = document.getElementById('fileInput');
+            const browseBtn = document.getElementById('browseBtn');
+            const fileInfo = document.getElementById('fileInfo');
+            const resultArea = document.getElementById('resultArea');
+            const base64Output = document.getElementById('base64Output');
+            const copyBtn = document.getElementById('copyBtn');
+            const downloadBtn = document.getElementById('downloadBtn');
+            
+            let currentFile = null;
+            
+            // Prevent default drag behaviors
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                dropArea.addEventListener(eventName, preventDefaults, false);
+                document.body.addEventListener(eventName, preventDefaults, false);
+            });
+            
+            // Highlight drop area when item is dragged over it
+            ['dragenter', 'dragover'].forEach(eventName => {
+                dropArea.addEventListener(eventName, highlight, false);
+            });
+            
+            ['dragleave', 'drop'].forEach(eventName => {
+                dropArea.addEventListener(eventName, unhighlight, false);
+            });
+            
+            // Handle dropped files
+            dropArea.addEventListener('drop', handleDrop, false);
+            
+            // Handle file input via browse button
+            browseBtn.addEventListener('click', () => {
+                fileInput.click();
+            });
+            
+            fileInput.addEventListener('change', handleFileSelect, false);
+            
+            // Copy to clipboard functionality
+            copyBtn.addEventListener('click', copyToClipboard);
+            
+            // Download functionality
+            downloadBtn.addEventListener('click', downloadAsText);
+            
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            
+            function highlight() {
+                dropArea.classList.add('highlight');
+            }
+            
+            function unhighlight() {
+                dropArea.classList.remove('highlight');
+            }
+            
+            function handleDrop(e) {
+                const dt = e.dataTransfer;
+                const files = dt.files;
+                handleFiles(files);
+            }
+            
+            function handleFileSelect(e) {
+                const files = e.target.files;
+                handleFiles(files);
+            }
+            
+            function handleFiles(files) {
+                if (files.length === 0) return;
+                
+                currentFile = files[0];
+                displayFileInfo(currentFile);
+                convertToBase64(currentFile);
+            }
+            
+            function displayFileInfo(file) {
+                fileInfo.innerHTML = `
+                    <strong>Selected file:</strong> ${file.name}<br>
+                    <strong>Type:</strong> ${file.type || 'unknown'}<br>
+                    <strong>Size:</strong> ${formatFileSize(file.size)}
+                `;
+            }
+            
+            function formatFileSize(bytes) {
+                if (bytes === 0) return '0 Bytes';
+                const k = 1024;
+                const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+            }
+            
+            function convertToBase64(file) {
+                const reader = new FileReader();
+                
+                reader.addEventListener('load', function() {
+                    // Remove data URL prefix if present
+                    const base64 = reader.result.split(',')[1] || reader.result;
+                    displayBase64Result(base64);
+                });
+                
+                reader.addEventListener('error', function() {
+                    base64Output.textContent = 'Error reading file. Please try again.';
+                    resultArea.style.display = 'block';
+                });
+                
+                reader.readAsDataURL(file);
+            }
+            
+            function displayBase64Result(base64) {
+                base64Output.textContent = base64;
+                resultArea.style.display = 'block';
+                
+                // Scroll to result area
+                resultArea.scrollIntoView({ behavior: 'smooth' });
+            }
+            
+            function copyToClipboard() {
+                const text = base64Output.textContent;
+                navigator.clipboard.writeText(text).then(() => {
+                    const originalText = copyBtn.textContent;
+                    copyBtn.textContent = 'Copied!';
+                    setTimeout(() => {
+                        copyBtn.textContent = originalText;
+                    }, 2000);
+                }).catch(err => {
+                    console.error('Failed to copy: ', err);
+                    alert('Failed to copy to clipboard. Please try again.');
+                });
+            }
+            
+            function downloadAsText() {
+                if (!currentFile) return;
+                
+                const text = base64Output.textContent;
+                const blob = new Blob([text], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `${currentFile.name}.base64.txt`;
+                document.body.appendChild(a);
+                a.click();
+                
+                // Clean up
+                setTimeout(() => {
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                }, 100);
+            }
+        });
+    </script>
+</body>
+</html>
